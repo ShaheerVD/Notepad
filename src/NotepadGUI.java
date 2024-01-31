@@ -152,7 +152,7 @@ public class NotepadGUI extends JFrame {
                     //need to append .txt to file if it does not have ,txt extension
                     String fileName = selectedFile.getName();
                     if(!fileName.substring(fileName.length()-4).equalsIgnoreCase(".txt")){
-                        selectedFile = new File(selectedFile.getAbsoluteFile()+".txt";
+                        selectedFile = new File(selectedFile.getAbsoluteFile()+".txt");
                     }
 
                     //create new file
@@ -231,5 +231,135 @@ public class NotepadGUI extends JFrame {
                 }
             }
         });
+        editMenu.add(undoMenuItem);
+
+        JMenuItem redoMenuItem = new JMenuItem("Redo");
+        redoMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //if edit to redo then redo it
+                if(undoManager.canRedo()){
+                    undoManager.redo();
+                }
+            }
+        });
+        editMenu.add(redoMenuItem);
+
+        return editMenu;
+    }
+
+    private JMenu addFormatMenu(){
+        JMenu formatMenu = new JMenu("Format");
+
+        //wrap word functionality
+        JCheckBoxMenuItem wordWrapMenuItem = new JCheckBoxMenuItem("Word Wrap");
+        wordWrapMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                boolean isChecked = wordWrapMenuItem.getState();
+                if(isChecked){
+                    //wrap words
+                    textArea.setLineWrap(true);
+                    textArea.setWrapStyleWord(true);
+                }else{
+                    //unwrap words
+                    textArea.setLineWrap(false);
+                    textArea.setWrapStyleWord(false);
+                }
+            }
+        });
+        formatMenu.add(wordWrapMenuItem);
+
+        //aligning text
+        JMenu alignTextMenu = new JMenu("Align Text");
+
+        //align text to left
+        JMenuItem alignTextLeftMenuItem = new JMenuItem("Left");
+
+        alignTextLeftMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                textArea.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+            }
+        });
+        alignTextMenu.add(alignTextLeftMenuItem);
+
+        //align text to the right
+        JMenuItem alignTextRightMenuItem = new JMenuItem("Right");
+        alignTextRightMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                textArea.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+
+            }
+        });
+        alignTextMenu.add(alignTextRightMenuItem);
+
+        formatMenu.add(alignTextMenu);
+        //font format
+        JMenuItem fontMenuItem = new JMenuItem("Font...");
+        fontMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //launch font menu
+                new FontMenu(NotepadGUI.this).setVisible(true);
+            }
+        });
+        formatMenu.add(fontMenuItem);
+
+        return formatMenu;
+    }
+
+    private JMenu addViewMenu(){
+        JMenu viewMenu = new JMenu("View");
+        JMenu zoomMenu = new JMenu("Zoom");
+
+        //zoom in functionality
+        JMenuItem zoomInMenuItem = new JMenuItem("Zoom in");
+        zoomInMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Font currentFont = textArea.getFont();
+                textArea.setFont(new Font(
+                    currentFont.getName(),
+                    currentFont.getStyle(),
+                        currentFont.getSize()+1
+                ));
+            }
+        });
+        zoomMenu.add(zoomInMenuItem);
+
+        //zoom out functionality
+        JMenuItem zoomOutMenuItem = new JMenuItem("Zoom out");
+        zoomOutMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Font currentFont = textArea.getFont();
+                textArea.setFont(new Font(
+                        currentFont.getName(),
+                        currentFont.getStyle(),
+                        currentFont.getSize() -1
+                ));
+            }
+        });
+        zoomMenu.add(zoomOutMenuItem);
+
+        //restore default zoom
+        JMenuItem zoomRestoreMenuItem = new JMenuItem("Restore Default Zoom");
+        zoomRestoreMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Font currentFont = textArea.getFont();
+                textArea.setFont(new Font(
+                        currentFont.getName(),
+                        currentFont.getStyle(),
+                        12
+                ));
+            }
+        });
+        zoomMenu.add(zoomRestoreMenuItem);
+        viewMenu.add(zoomMenu);
+
+        return viewMenu;
     }
 }

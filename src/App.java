@@ -6,7 +6,7 @@ public class App {
             @Override
             public void run() {
                 try{
-                    UIManager.setLookAndFeel("com.jtattoo.plaf.acryl.AcrylLookandFeel");
+                    UIManager.setLookAndFeel("com.jtattoo.plaf.acryl.AcrylLookAndFeel");
                     new NotepadGUI().setVisible(true);
                 }catch(Exception e){
                     e.printStackTrace();
